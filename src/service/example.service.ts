@@ -46,7 +46,7 @@ export const getItem = async() => {
         })
 
         let itemsData = await items.json();
-        let itemsFilter = itemsData.value.filter(item => item.inventory > 0);
+        let itemsFilter = itemsData.value.filter(item => item.inventory != 0);
 
         let categoryGroup = new Map<string,examTypes.CATEGORYDATA>()
 
@@ -55,12 +55,14 @@ export const getItem = async() => {
                 categoryGroup.set(item.itemCategoryCode,{
                     itemCategoryCode:item.itemCategoryCode,
                     totalqty:0,
+                    itemscount:0,
                     products:[]
                 })
             }
 
             let check = categoryGroup.get(item.itemCategoryCode)
             check!.totalqty += item.inventory;
+            check!.itemscount += 1;
 
 
             check!.products.push({
@@ -101,9 +103,6 @@ export const getItemReport = async(req:Request , res:Response) => {
         const items = await getItem();
         const workbook = new ExcelJS.Workbook();
         const sheet = workbook.addWorksheet("Example Report");
-        sheet.columns = [
-            
-        ]
         sheet.getRow(1).font = {bold:true}
 
         sheet.columns = [
@@ -165,8 +164,10 @@ export const getItemReport = async(req:Request , res:Response) => {
                 sheet.getRow(row).getCell(24).value = product['lastModifiedDateTime'];
             }
             row++;
-            sheet.getRow(row).getCell(1).value = "Total Category"
-            sheet.getRow(row).getCell(2).value = item.totalqty;
+            sheet.getRow(row).getCell(1).value = "Total Items";
+            sheet.getRow(row).getCell(2).value = item.itemscount;
+            sheet.getRow(row).getCell(3).value = "Total Category"
+            sheet.getRow(row).getCell(4).value = item.totalqty;
             sheet.getRow(row).font = { bold : true }
             row = row + 2;
         }
