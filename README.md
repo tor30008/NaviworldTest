@@ -25,6 +25,15 @@ Server run 1000
 ```
 <img width="1826" height="216" alt="image" src="https://github.com/user-attachments/assets/d75524f4-9c3d-42cd-9a61-ae8ff51c104b" />
 
+# ขั้นตอนสาม Start Integration test
+- เปิด Terminal 
+- พิมพ์ "npm run test:integration"
+```bash
+npm run test:integration
+```
+<img width="1834" height="448" alt="image" src="https://github.com/user-attachments/assets/5cf268c5-09b1-4073-ada8-a93be2ca0069" />
+
+
 # API ทดสอบ 
 ### Get /listItems 
 - Filter inventory == 0
