@@ -1,5 +1,5 @@
 export interface RESPONSEDATA {
-    code: 200 | 400 | 500,
+    statuscode : 200 | 400 | 500,
     success:boolean,
     message:string
     error?:any;

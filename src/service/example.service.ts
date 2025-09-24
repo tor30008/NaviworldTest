@@ -83,9 +83,6 @@ export const listItem = async(req:Request , res:Response) => {
     let responseData:examTypes.RESPONSEDATA = { code : 200 , success : true , message : "success" }
     try{
         const items = await getItem();
-        responseData.code = 200;
-        responseData.success = true;
-        responseData.message = "success";
         responseData.data = items;
         return res.status(responseData.code).json(responseData);
     }catch(error){
