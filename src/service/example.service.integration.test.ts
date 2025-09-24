@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals';
-import { getToken, getItem , getItemReport } from './example.service';
+import { getToken, getItem , getItemReport ,listItem } from './example.service';
 import express from 'express';
 import request from "supertest";
 import 'dotenv/config'; 
@@ -32,8 +32,6 @@ describe('Integration Test for Business Central API', () => {
                 if (firstCategory.products.length > 0) {
                     const firstProduct = firstCategory.products[0];
 
-                    console.log('Sample product received:', firstProduct);
-
                     expect(firstProduct).toHaveProperty('number');
                     expect(firstProduct).toHaveProperty('displayName');
                     expect(firstProduct).toHaveProperty('itemCategoryCode');
@@ -46,10 +44,27 @@ describe('Integration Test for Business Central API', () => {
 });
 
 const app = express();
+app.get("/listItems", listItem);
 app.get("/reportItems", getItemReport);
-describe("GET /reportItems (Integration)", () => {
+
+
+describe("GET /listItems", () => {
+    it("Should return items in JSON format", async () => {
+      const res = await request(app).get("/listItems");
+  
+      expect(res.status).toBe(200);
+      expect(res.headers["content-type"]).toContain("application/json");
+      expect(res.body).toHaveProperty("code", 200);
+      expect(res.body).toHaveProperty("success", true);
+      expect(res.body).toHaveProperty("message", "success");
+      expect(res.body).toHaveProperty("data");
+      expect(Array.isArray(res.body.data)).toBe(true);
+      expect(res.body.data.length).toBeGreaterThan(0);
+    }, 10000);
+});
+
+describe("GET /reportItems", () => {
   it("Should be get file download", async () => {
-    console.log(app);
     const res = await request(app)
                     .get("/reportItems")
                     .buffer(true)
@@ -63,7 +78,6 @@ describe("GET /reportItems (Integration)", () => {
     expect(res.headers["content-type"]).toContain(
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     );
-
     expect(res.headers["content-disposition"]).toContain("example.xlsx");
     expect(res.body).toBeDefined();
 

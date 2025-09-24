@@ -13,12 +13,12 @@ dotenv.config({ path: path.join(__dirname, '../../example.env') });
 
 export const getToken = async() => {
     try{
-        const urlAccessToken = "https://login.microsoftonline.com/3b5ff753-4aa1-41c3-8a58-e148e35fa1ab/oauth2/v2.0/token";
+        const urlAccessToken = process.env.URL_ACCESSTOKEN as string ?? "";
         const body = new URLSearchParams();
         body.append('client_id', process.env.CLIENT_ID ?? "");
         body.append('client_secret', process.env.CLIENT_SECRET ?? "");
-        body.append('scope', 'https://api.businesscentral.dynamics.com/.default');
-        body.append('grant_type', 'client_credentials');
+        body.append('scope', process.env.SCOPE ?? "");
+        body.append('grant_type', process.env.GRANT_TYPE ?? "");
 
         const accessToken = await fetch(urlAccessToken,{
             method:'POST',
@@ -30,8 +30,6 @@ export const getToken = async() => {
 
         const tokenData = await accessToken.json();
         return tokenData.access_token;
-
-        //res.status(200).json(requestData);
     }catch(error){
         console.log(error);
     }
@@ -39,8 +37,8 @@ export const getToken = async() => {
 
 export const getItem = async() => {
     try{
-        const token = await getToken();//'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IkhTMjNiN0RvN1RjYVUxUm9MSHdwSXEyNFZZZyIsImtpZCI6IkhTMjNiN0RvN1RjYVUxUm9MSHdwSXEyNFZZZyJ9.eyJhdWQiOiJodHRwczovL2FwaS5idXNpbmVzc2NlbnRyYWwuZHluYW1pY3MuY29tIiwiaXNzIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvM2I1ZmY3NTMtNGFhMS00MWMzLThhNTgtZTE0OGUzNWZhMWFiLyIsImlhdCI6MTc1ODYzNTUxNywibmJmIjoxNzU4NjM1NTE3LCJleHAiOjE3NTg2Mzk0MTcsImFpbyI6ImsyUmdZTEE4ZE1QYk5uRGkxUjJKN0hzdmI1Ri9EUUE9IiwiYXBwaWQiOiIwYTI0ZTE0MC0yMGZiLTRiYTYtYTE5MC1lYzRkZTE4ZGNiM2MiLCJhcHBpZGFjciI6IjEiLCJpZHAiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC8zYjVmZjc1My00YWExLTQxYzMtOGE1OC1lMTQ4ZTM1ZmExYWIvIiwiaWR0eXAiOiJhcHAiLCJvaWQiOiJkMDI1ZTViNS1iNWFjLTQ5M2EtOGU0Yy05YTdiNjg2OTA4YjkiLCJyaCI6IjEuQVQwQVVfZGZPNkZLdzBHS1dPRkk0MS1ocXozdmJabHNzMU5CaGdlbV9Ud0J1SjhxQVFBOUFBLiIsInJvbGVzIjpbIkF1dG9tYXRpb24uUmVhZFdyaXRlLkFsbCIsImFwcF9hY2Nlc3MiLCJBZG1pbkNlbnRlci5SZWFkV3JpdGUuQWxsIiwiQVBJLlJlYWRXcml0ZS5BbGwiXSwic3ViIjoiZDAyNWU1YjUtYjVhYy00OTNhLThlNGMtOWE3YjY4NjkwOGI5IiwidGlkIjoiM2I1ZmY3NTMtNGFhMS00MWMzLThhNTgtZTE0OGUzNWZhMWFiIiwidXRpIjoic091Ty1ZcmxhVU9pUjRYLVQwMWxBQSIsInZlciI6IjEuMCIsInhtc19mdGQiOiIteG53V1RKMWF0aG5VN2xCTTAxMVh4Y05KeldFTlB6UmlxQjdaekxRdkJJQmEyOXlaV0Z6YjNWMGFDMWtjMjF6IiwieG1zX2lkcmVsIjoiNyAyIiwieG1zX3JkIjoiMC40MkxsWUJKaXRCVVM0V0FYRXJpMFF1N3BBNzQ0aDlhUGozaDM3SkxfQkJUbEZCS3dhNW9RdjZ4YXduWG13dGVxRmFtVDlZQ2lIRUlDdHU5elotWnNEblpzWTFfMjE0Wnh4M3dBIn0.c_iEw7C-hZJ1fsJiabpVROcJa6yBxr8XO9u6piV0zBp5fcSlAgRmBfgSwjD4i4Og2oKfeFxb9xYp3Uts5hE_sJul5KNsE2OOBbAdJUg39SbVObTWLLqUjAYqnRzmCbAXa7idkmun8PKpu6TTXJ8a7GjjkxVf6ZBdu7IvgQT0RHjwr4r4fEM-pEI-F_547l4QB8Fz1M8B6odkFrr8ZmLuYHMiKL_PsehoEf3IoGoHUD_Brabulnong1qZIhsd4LZcWtNpBvOnXX-QUKT8E5mTfGNyW63jlPawYOiK_sjS0_USxviy3Rf_Z1o-uP0ZcABNsg0gGuxErQsD2X7b2n1Jsg';
-        const items = await fetch('https://api.businesscentral.dynamics.com/v2.0/3b5ff753-4aa1-41c3-8a58-e148e35fa1ab/sandboxth/api/v2.0/companies(67b66d35-042b-f011-9a4a-002248591f68)/items',{
+        const token = await getToken();
+        const items = await fetch(process.env.URL_GETITEM ?? "",{
             method:'GET',
             headers:{
                 'Authorization' : `Bearer ${token}`
@@ -76,6 +74,24 @@ export const getItem = async() => {
 
     }catch(error){
         console.log(error);
+    }
+}
+
+export const listItem = async(req:Request , res:Response) => {
+    let responseData:examTypes.RESPONSEDATA = { code : 200 , success : true , message : "success" }
+    try{
+        const items = await getItem();
+        responseData.code = 200;
+        responseData.success = true;
+        responseData.message = "success";
+        responseData.data = items;
+        return res.status(responseData.code).json(responseData);
+    }catch(error){
+        responseData.code = 500;
+        responseData.success = false;
+        responseData.message = "error";
+        responseData.error = error;
+        return res.status(responseData.code).json(responseData);
     }
 }
 
@@ -165,8 +181,6 @@ export const getItemReport = async(req:Request , res:Response) => {
 
         res.end();
 
-
-        //res.status(200).json(items);
     }catch(error){
        responseData.code = 500;
        responseData.success = false;
