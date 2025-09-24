@@ -4,6 +4,7 @@ import * as service from './service/example.service.js';
 const app = express();
 const port = 1000;
 
+
 app.use(express.json());
 app.get('/listItems',service.listItem);
 app.get('/reportItems',service.getItemReport);

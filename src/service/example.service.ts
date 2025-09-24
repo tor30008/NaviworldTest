@@ -45,7 +45,7 @@ export const getItem = async() => {
             }
         })
 
-        let itemsData = await items.json();
+        const itemsData = await items.json();
         let itemsFilter = itemsData.value.filter(item => item.inventory != 0);
 
         let categoryGroup = new Map<string,examTypes.CATEGORYDATA>()
@@ -57,7 +57,7 @@ export const getItem = async() => {
                     totalqty:0,
                     itemscount:0,
                     products:[]
-                })
+                }) as examTypes.CATEGORYDATA
             }
 
             let check = categoryGroup.get(item.itemCategoryCode)
@@ -70,7 +70,7 @@ export const getItem = async() => {
             });
         }
 
-        let sort : examTypes.CATEGORYDATA[] = Array.from(categoryGroup.values()).sort((a,b) => a.itemCategoryCode.localeCompare(b.itemCategoryCode))
+        const sort : examTypes.CATEGORYDATA[] = Array.from(categoryGroup.values()).sort((a,b) => a.itemCategoryCode.localeCompare(b.itemCategoryCode))
 
         return sort;
 

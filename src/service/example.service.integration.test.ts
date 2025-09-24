@@ -2,7 +2,11 @@ import { jest } from '@jest/globals';
 import { getToken, getItem , getItemReport ,listItem } from './example.service';
 import express from 'express';
 import request from "supertest";
-import 'dotenv/config'; 
+
+
+const app = express();
+app.get("/listItems", listItem);
+app.get("/reportItems", getItemReport);
 
 describe('Integration Test for Business Central API', () => {
 
@@ -28,10 +32,12 @@ describe('Integration Test for Business Central API', () => {
                 
                 expect(firstCategory.products).toBeDefined();
                 expect(Array.isArray(firstCategory.products)).toBe(true);
+                expect(firstCategory).toHaveProperty('itemCategoryCode');
+                expect(firstCategory).toHaveProperty('totalqty');
+                expect(firstCategory).toHaveProperty('itemscount');
 
                 if (firstCategory.products.length > 0) {
                     const firstProduct = firstCategory.products[0];
-
                     expect(firstProduct).toHaveProperty('number');
                     expect(firstProduct).toHaveProperty('displayName');
                     expect(firstProduct).toHaveProperty('itemCategoryCode');
@@ -42,11 +48,6 @@ describe('Integration Test for Business Central API', () => {
         });
     });
 });
-
-const app = express();
-app.get("/listItems", listItem);
-app.get("/reportItems", getItemReport);
-
 
 describe("GET /listItems", () => {
     it("Should return items in JSON format", async () => {
@@ -60,7 +61,7 @@ describe("GET /listItems", () => {
       expect(res.body).toHaveProperty("data");
       expect(Array.isArray(res.body.data)).toBe(true);
       expect(res.body.data.length).toBeGreaterThan(0);
-    }, 10000);
+    }, 3000);
 });
 
 describe("GET /reportItems", () => {
@@ -80,8 +81,7 @@ describe("GET /reportItems", () => {
     );
     expect(res.headers["content-disposition"]).toContain("example.xlsx");
     expect(res.body).toBeDefined();
-
-    expect(res.body.length).toBeGreaterThan(1);
-  }, 30000); 
+    expect(res.body.length).toBeGreaterThan(100);
+  }, 5000); 
 });
 

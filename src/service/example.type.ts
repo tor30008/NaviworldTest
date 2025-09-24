@@ -8,6 +8,7 @@ export interface RESPONSEDATA {
 export interface CATEGORYDATA {
     itemCategoryCode:string;
     totalqty:number;
+    itemscount:number;
     products: PRODUCTS[]
 }
 
